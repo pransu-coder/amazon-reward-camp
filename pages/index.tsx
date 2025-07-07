@@ -10,7 +10,7 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [emailStep, setEmailStep] = useState(false);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null!);
 
   const allRewards = [
     { name: "Amazon ₹1000 Voucher", icon: "mdi:amazon" },
@@ -24,21 +24,20 @@ export default function Home() {
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
+    if (!scrollContainer || !scrollContainer.scrollWidth) return;
     let scrollAmount = 0;
     const scrollStep = () => {
-      if (scrollContainer) {
-        scrollAmount += 1;
-        if (scrollAmount >= scrollContainer.scrollWidth / 2) {
-          scrollAmount = 0;
-        }
-        scrollContainer.scrollLeft = scrollAmount;
+      scrollAmount += 1;
+      if (scrollAmount >= scrollContainer.scrollWidth / 2) {
+        scrollAmount = 0;
       }
+      scrollContainer.scrollLeft = scrollAmount;
     };
     const interval = setInterval(scrollStep, 20);
     return () => clearInterval(interval);
   }, []);
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setConfirmed(true);
   };
